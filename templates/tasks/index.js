@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var config = require('rc')('jybworkflow', {
+var config = require('rc')('easy-workflow', {
     projectName: process.cwd().split(path.sep).pop()
 });
 

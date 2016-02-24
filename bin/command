@@ -5,7 +5,6 @@ var log = require('colors');
 var nfs = require("fs");
 var path = require("path");
 var readline = require("readline");
-var copy = require("copy");
 var cp = require("child_process");
 
 
@@ -133,7 +132,7 @@ function initCmd(name) {
     var max = 4;
     var autoResizeJs = loadTemplate("autoPageSize.js");
     var gulpFile = loadTemplate("gulpfile.js");
-    var configFile = loadTemplate(".jybworkflowrc");
+    var configFile = loadTemplate(".easy-workflowrc");
     dirEmpty(name, function (empty) {
         if(empty) {
             genDir();
@@ -162,14 +161,14 @@ function initCmd(name) {
                 complete();
             });
             write(name + "/gulpfile.js", gulpFile);
-            write(name + "/.jybworkflowrc", configFile);
+            write(name + "/.easy-workflowrc", configFile);
         })
     }
 
     function  complete() {
         if(--max) {return;}
         console.log(log.green("\n---------end initializes the workspace---------------\n").bold);
-        console.log("now you need to modify the configuration files .jybworkflowrc\n".yellow.bold);
+        console.log("now you need to modify the configuration files .easy-workflowrc\n".yellow.bold);
         console.log("-----------------------------------------------the end".red.bold);
     }
 }
@@ -196,7 +195,7 @@ function write(path, str, mode) {
 }
 
 function copy_template(from, to) {
-    from = path.join(__dirname, '..', 'lib', from);
+    from = path.join(__dirname, '..', 'templates', from);
     write(to, nfs.readFileSync(from, 'utf-8'));
 }
 
