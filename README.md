@@ -9,6 +9,7 @@
 - 编译html文件：替换静态资源路径，编译指定图片为base64方式引用
 - 压缩图片：基于目录的压缩，指定图片目录，或者压缩整个目录
 - 发布模式：自动合成雪碧图，压缩所有的css，压缩所有图片（可选择编译所有文件和只编译更改过的文件）
+- 命令行es
 
 -----------------------------------
 ### 依赖
@@ -31,7 +32,7 @@ $ npm install easy-workflow -g
 ### 使用方式
 <b>1、命令行下切换到用于开发的目录，这一步首先要初始化工作流的运行环境，在该目录下执行</b>
 ```sh
-$ easy workspace <dirName>
+$ es workspace <dirName>
 ```
 <b>2、等待命令执行结束后，请按照命令行内的提示执行npm install命令安装所需依赖</b>或者<a target="_blank" href="http://pan.baidu.com/s/1jGSZdxs">直接下载</a>我打包好的node_modules
 ```sh
@@ -49,7 +50,7 @@ $ npm install
 ```
 <b>3、在运行环境安装完毕后，就可以初始化开发环境了</b>
 ```sh
-$ easy init <dirName>
+$ es init <dirName>
 ```
 在这一步会生成若干文件，今后所有的构建文件的开发都会在这个目录下进行，这么设计的目的就是为了省事儿，譬如我有很多个开发目录，我就不需要<br/>
 在每一个开发目录下都生成一份node_modules，所有的依赖都在父目录的tasks和node_modules里了。<br/>eg：easy init demo，那么：
