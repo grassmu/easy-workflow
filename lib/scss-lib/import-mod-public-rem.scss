@@ -1,0 +1,184 @@
+@import "import-lib-mixins-rem";
+
+a {
+  color: #333333;
+}
+
+body {
+  background-color: #f5f5f5;
+  font-family: ff-tisa-web-pro-1,ff-tisa-web-pro-2,"Lucida Grande","Hiragino Sans GB","Hiragino Sans GB W3"
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.ui-fl-r {
+  float: right;
+}
+
+.ui-fl-l {
+  float: left;
+}
+
+.ui-ta-c {
+  text-align: center;
+}
+
+.ui-ta-l {
+  text-align: left;
+}
+
+.ui-ta-r {
+  text-align: right!important;
+}
+
+.ui-no-tap-highlight {
+  -webkit-tap-highlight-color: rgba(255,255,255,0);
+}
+
+.ui-text-strong {
+  font-weight: bold;
+}
+
+.ui-fw-n {
+  font-weight: normal!important;
+}
+
+.ui-link-block {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ui-d-b {
+  display: block;
+}
+
+.ui-d-n {
+  display: none!important;
+}
+
+.ui-fw-n {
+  font-weight: normal!important;
+}
+
+.ui-p-r {
+  position: relative;
+}
+
+.ui-p-a {
+  position: absolute;
+}
+
+.ui-bb-n {
+  border-bottom: none!important;
+}
+
+.ui-bt-n {
+  border-top: none!important;
+}
+
+.ui-bb-standard {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.ui-bt-standard {
+  border-top: 1px solid #e5e5e5;
+}
+
+.ui-ov-h {
+  overflow: hidden;
+}
+
+.ui-lh-standard {
+  line-height: .7rem !important;
+}
+
+.ui-link-dih {
+  height: 100%;
+  display: inline-block;
+}
+.ui-d-wb {
+  display: -webkit-box;
+  display: box;
+}
+
+.overlay {
+  background-color: #000;
+  filter: alpha(opacity=60);
+  opacity: 0.6;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 1024;
+  -webkit-backface-visibility: hidden;
+}
+
+.ui-vv {
+  visibility: visible;
+}
+
+.ui-vh {
+  visibility: hidden;
+}
+
+.ui-plr-standard {
+  padding-left: pxToRem(15);
+  padding-right: pxToRem(15);
+}
+
+//常用间距
+@mixin generateCommSpaces {
+  @if length($spaces) > 0 {
+    @each $space in $spaces {
+      .ui-mt-#{$space} {
+        margin-top: pxToRem($space + 0px);
+      }
+      .ui-mr-#{$space} {
+        margin-right: pxToRem($space + 0px);
+      }
+      .ui-mb-#{$space} {
+        margin-bottom: pxToRem($space + 0px);
+      }
+      .ui-ml-#{$space} {
+        margin-left: pxToRem($space + 0px);
+      }
+      .ui-pt-#{$space} {
+        padding-top: pxToRem($space + 0px);
+      }
+      .ui-pr-#{$space} {
+        padding-right: pxToRem($space + 0px);
+      }
+      .ui-pb-#{$space} {
+        padding-bottom: pxToRem($space + 0px);
+      }
+      .ui-pl-#{$space} {
+        padding-left: pxToRem($space + 0px);
+      }
+    }
+  }
+  @else {
+    @warn "common space is empty!";
+  }
+}
+
+//常用颜色
+@mixin generateCommColors {
+  @if length($textColors) > 0 {
+    @each $color in $textColors {
+      .color-#{$color} {
+        color: unquote("#" + $color);
+      }
+    }
+  }
+  @else {
+    @warn "common color is empty!";
+  }
+}
+
+@include generateCommSpaces;
+@include generateCommColors;

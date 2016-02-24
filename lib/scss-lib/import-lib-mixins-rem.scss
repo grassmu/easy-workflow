@@ -1,0 +1,553 @@
+@import "import-lib-settings";
+//----------------------------
+//
+//  mixins.less v0.1.5
+//  http://mixinsless.com/
+//  Reuse snippets & Cross-browser private properties snippets.
+//----------------------------
+
+@function pxToRem($px) {
+  @if (unitless($px)) {
+    @return pxToRem($px + 0px);
+  } @else {
+    @return ($px / $baseFontSize) * 1rem;
+  }
+}
+
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+//prefixer
+//专为CSS3等需要添加浏览器前缀设置的混合宏
+//$property： 属性名
+//$value:  属性值
+//$prefixes:  需要支持的浏览器前缀 webkit moz ms o spec
+//*如果$prefixes不传值的话，则抛出"Unrecognized prefix: #{$prefix}"错误
+//调用方式，如：
+//@mixin box-shadow2($shadow...) {
+//    @include prefixer(box-shadow, $shadow, webkit moz ms o spec);
+//}
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+//是否支持浏览器前缀，不想支持的属性，可以设置为false
+$prefix-for-webkit: true !default;
+$prefix-for-mozilla: false !default;
+$prefix-for-microsoft: false !default;
+$prefix-for-opera: false !default;
+$prefix-for-spec: true !default; //标准版
+@mixin prefixer($property, $value, $prefixes) {
+  @each $prefix in $prefixes {
+    @if $prefix == webkit and $prefix-for-webkit == true {
+      -webkit-#{$property}: $value;
+    }
+    @else if $prefix == moz and $prefix-for-mozilla == true {
+      -moz-#{$property}: $value;
+    }
+    @else if $prefix == ms and $prefix-for-microsoft == true {
+      -ms-#{$property}: $value;
+    }
+    @else if $prefix == o and $prefix-for-opera == true {
+      -o-#{$property}: $value;
+    }
+    @else if $prefix == spec and $prefix-for-spec == true {
+      #{$property}: $value;
+    }
+    @else {
+      //添加注释以减少输出警告日志，因为移动端页面不需要添加moz ms o 前缀
+      //@warn "Unrecognized prefix: #{$prefix}";
+    }
+  }
+}
+
+//---------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+//字体设置，不采用rem的方式，直接通过监听dpi设置px值
+//$devicePixelRatio： DPI屏幕的分类
+//$classNames:  类名
+//$values:  对应的值
+//*如果出现类名和对应需要设置的值数量不等的情况，则抛出"Parameters do not match..."错误
+//调用方式，如：@include setFontSize(1 2 3, ui-text-small f-15 ui-text-middle, 13px 15px 18px);
+//---------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+@mixin setFontSize($fontSizes) {
+  $fontSizeLengths: length($fontSizes) + 1;
+  @for $i from 1 to $fontSizeLengths {
+    .f-#{(nth($fontSizes, $i))} {
+      font-size: (nth($fontSizes, $i)) + 0px;
+    }
+  }
+}
+
+//---------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+//给不同的屏幕大小添加媒体查询
+//$width： 屏幕宽度，若希望小于375px的替换另外的字体则传入374
+//$value:  默认字体
+//$targetValue:  屏幕宽度小于多少改变字体到$targetValue
+//调用方式，如：@include setMediaFontSize(374, 17, 15);
+//---------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+@mixin setMediaFontSize($width, $value, $targetValue) {
+  .mf-#{$value} {
+    font-size: $value + 0px;
+  }
+  @media screen and (max-width: $width + 0px) {
+    @if unitless($value) {
+      .mf-#{$value} {
+        font-size: $targetValue + 0px !important;
+      }
+    }
+  }
+}
+
+// Border radius with the same argument
+// -------------------------
+@mixin rounded($radius: .16rem) {
+  @include prefixer(border-radius, $radius, webkit moz ms o spec);
+}
+
+// Border radius with different arguments
+// -------------------------
+@mixin border-radius($radius...) {
+  @include prefixer(border-radius, $radius, webkit moz ms o spec);
+}
+
+// Background size
+// -------------------------
+@mixin background-size($size) {
+  @include prefixer(background-size, $size, spec);
+}
+
+// Opacity
+// -------------------------
+@mixin opacity($opacity) {
+  opacity:$opacity;
+  $opacityIE : $opacity * 100;
+  filter: "alpha(opacity=${opacityIE})";
+}
+
+// Appearance
+// -------------------------
+@mixin appearance($appearance:none) {
+  @include prefixer(appearance, $appearance, webkit moz ms o spec);
+}
+
+// Gradient
+// -------------------------
+@mixin gradient($start: #000000, $stop: #FFFFFF) {
+  background:($start + $stop)/2;
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0, $start), color-stop(1, $stop));
+  background:-moz-linear-gradient(center top, $start 0%, $stop 100%);
+}
+
+// Box shadow
+// -------------------------
+@mixin drop-shadow($horizontal: 0, $vertical: 1px, $blur: 2px, $alpha: 0.1) {
+  @include prefixer(box-shadow, $horizontal $vertical  $blur rgba(0, 0, 0, $alpha), webkit moz ms o spec);
+}
+
+// Box shadow inset
+// -------------------------
+@mixin inner-shadow($horizontal: 0, $vertical: 1px, $blur: 2px, $alpha: 0.4) {
+  @include prefixer(box-shadow, inset $horizontal $vertical $blur rgba(0, 0, 0, $alpha), webkit moz ms o spec);
+}
+
+// Box inner border
+// -------------------------
+@mixin inner-border($width: 1px, $color: #000) {
+  @include prefixer(box-shadow, inset 0 0 0 $width $color, webkit moz ms o spec);
+}
+
+// Box shadow default
+// -------------------------
+@mixin box-shadow($value...) {
+  @include prefixer(box-shadow, $value, webkit moz ms o spec);
+}
+
+// Animation
+// -------------------------
+@mixin animation($animation) {
+  @include prefixer(animation, $animation, webkit moz ms o spec);
+}
+
+@mixin transition($transition) {
+  @include prefixer(transition, $transition, webkit moz ms o spec);
+}
+@mixin transition-delay($transition-delay) {
+  @include prefixer(transition-delay, $transition-delay, webkit moz ms o spec);
+}
+@mixin transition-duration($transition-duration) {
+  @include prefixer(transition-duration, $transition-duration, webkit moz ms o spec);
+}
+
+// Transform
+// -------------------------
+@mixin transform($arguments...) {
+  @include prefixer(transform, $arguments, webkit moz ms o spec);
+}
+
+// Transform rotation
+// -------------------------
+@mixin rotation($deg:5deg) {
+  @include prefixer(transform, rotate($deg), webkit moz ms o spec);
+}
+
+// Transform scale
+// -------------------------
+@mixin scale($ratio:1.5) {
+  @include prefixer(transform, scale($ratio), webkit moz ms o spec);
+}
+
+// Translate
+// -------------------------
+@mixin translate($x:0, $y:0) {
+  @include prefixer(transform, translate($x, $y), webkit moz ms o spec);
+}
+
+// Translate3d
+// -------------------------
+@mixin translate3d($x, $y, $z) {
+  @include prefixer(transform, translate3d($x, $y, $z), webkit moz ms o spec);
+}
+
+// Background clipping
+// -------------------------
+@mixin background-clip($clip) {
+  @include prefixer(background-clip, $clip, webkit moz ms o spec);
+}
+
+// CSS columns
+// -------------------------
+@mixin columns($colwidth: 250px, $colcount: 0, $colgap: 50px, $columnRuleColor: #EEEEEE, $columnRuleStyle: solid, $columnRuleWidth: 1px) {
+  -moz-column-width:$colwidth;
+  -moz-column-count:$colcount;
+  -moz-column-gap:$colgap;
+  -moz-column-rule-color:$columnRuleColor;
+  -moz-column-rule-style:$columnRuleStyle;
+  -moz-column-rule-width:$columnRuleWidth;
+  -webkit-column-width:$colwidth;
+  -webkit-column-count:$colcount;
+  -webkit-column-gap:$colgap;
+  -webkit-column-rule-color:$columnRuleColor;
+  -webkit-column-rule-style:$columnRuleStyle;
+  -webkit-column-rule-width:$columnRuleWidth;
+  column-width:$colwidth;
+  column-count:$colcount;
+  column-gap:$colgap;
+  column-rule-color:$columnRuleColor;
+  column-rule-style:$columnRuleStyle;
+  column-rule-width:$columnRuleWidth;
+}
+
+// Import font
+// -------------------------
+@mixin font-face($fontFamily, $fileName, $style, $weight) {
+  @font-face{
+    font-family:$fontFamily;
+    font-style:$style;
+    font-weight:$weight;
+    src:url('#{$fileName}.eot');
+    src:local('@fontFamily'), url('#{$fileName}.eot?#iefix') format('embedded-opentype'), url('#{$fileName}.woff') format('woff'), url('#{$fileName}.ttf') format('truetype'), url('#{$fileName}.svg#@{fontFamily}') format('svg'), url("#{$fileName}.otf") format('opentype');
+  }
+}
+
+// Clearfix
+// -------------------------
+%clearfix {
+  *zoom:1;
+  &:before {
+    content:'';
+    display:block;
+  }
+  &:after {
+    content:'';
+    display:table;
+    clear:both;
+  }
+}
+
+// CSS image replacement
+// -------------------------
+// Source: https://github.com/h5bp/html5-boilerplate/commit/aa0396eae757
+@mixin hide-text() {
+  font:0/0 a;
+  color:transparent;
+  text-shadow:none;
+  background-color:transparent;
+  border:0;
+}
+
+// Force line breaks
+// -------------------------
+@mixin word-break() {
+  word-break:break-all;
+  word-wrap:break-word;
+  white-space: normal;
+}
+
+// No wrap
+// -------------------------
+@mixin no-wrap() {
+  word-break: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+}
+
+// Text overflow with(...)
+// -------------------------
+// Requires inline-block or block for proper styling
+@mixin text-overflow() {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  max-width:100%;
+}
+
+@mixin line-overflow($line) {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:-webkit-box;
+  -webkit-line-clamp:$line; /* number of lines to show */
+  -webkit-box-orient:vertical;
+}
+
+// Creates a wrapper for a series of columns
+// -------------------------
+@mixin lay-row() {
+  // Negative margin the row out to align the content of columns
+  margin-left:  ($grid-gutter-width / -2);
+  margin-right: ($grid-gutter-width / -2);
+  // Then clear the floated columns
+  @include clearfix();
+}
+
+// Generate the columns
+// -------------------------
+@mixin lay-column($columns) {
+  @media (min-width: $grid-float-breakpoint) {
+    float: left;
+    // Calculate width based on number of columns available
+    width: percentage($columns / $grid-columns);
+  }
+  // Prevent columns from collapsing when empty
+  min-height: 1px;
+  // Set inner padding as gutters instead of margin
+  padding-left:  ($grid-gutter-width / 2);
+  padding-right: ($grid-gutter-width / 2);
+}
+
+// Generate the column offsets
+// -------------------------
+@mixin lay-column-offset($columns) {
+  @media (min-width: $grid-float-breakpoint) {
+    margin-left: percentage(($columns / $grid-columns));
+  }
+}
+
+// Alpha background
+// -------------------------
+@mixin alpha-background($rgb:#000,$alpha:.5){
+  $rgba-color:fade($rgb,$alpha*100);
+  $argb-color:argb($rgba-color);
+  background-color:$rgba-color;
+  filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$argb-color}', endColorstr='#{$argb-color}', GradientType=0)\9";
+  zoom:1;
+}
+
+// Controls the selection model of an element.
+// -------------------------
+@mixin user-select($arguments:none) {
+  @include prefixer(user-select, $arguments, webkit moz ms o spec);
+}
+
+// Flexbox display
+// -------------------------
+// flex or inline-flex
+@mixin flex-display($display: flex) {
+  display: "-webkit-#{display}";
+  display: "-moz-#{display}";
+  display: $display;
+}
+
+@mixin arrow($rotate, $color, $size, $borderSize) {
+  content: '';
+  display: block;
+  width: $size;
+  height: $size;
+  border-right: $borderSize solid $color;
+  border-top: $borderSize solid $color;
+  @include rotation($rotate);
+  box-sizing: border-box;
+  position: absolute;
+}
+
+@mixin cycle-lib($width: 0, $height:0, $radius:0) {
+  width: $width;
+  height:$height;
+  @include rounded($radius);
+}
+
+@mixin vt-middle {
+  display: -webkit-box;
+  -webkit-box-pack: center;
+  -webkit-box-align: center;
+}
+
+@mixin h-absolute-middle($height: 0, $border: 1) {
+  height: $height;
+  position:absolute;
+  top: 50%;
+  margin-top: -$height/2 - $border;
+}
+
+@mixin arrow-entity-lib-down($bt: 6px, $bother: 5px, $bc: #333) {
+  width: 0;
+  height: 0;
+  border-top: $bt solid $bc;
+  border-left: $bother solid transparent;
+  border-bottom: $bother solid transparent;
+  border-right: $bother solid transparent;
+}
+
+@mixin icon-vt-middle($vt: middle) {
+  display: inline-block;
+  vertical-align: $vt;
+}
+
+@mixin box-justify($difs: 50 50) {
+  @include vt-middle();
+  -webkit-box-pack: justify;
+  div {
+    -webkit-box-flex: 1;
+    position: relative;
+  }
+  @for $i from 1 through length($difs) {
+    div:nth-child(#{$i}) {
+      width: nth($difs, $i) + 0%;
+    }
+  }
+}
+
+@mixin line-text($bc: #e5e5e5, $subBc: #f5f5f5, $pd: 10px, $top: -10px, $fs:14px) {
+  .mod-line-text {
+    position: relative;
+    text-align: center;
+    height: 1px;
+    font-size: $fs;
+    background-color: $bc;
+    span {
+      position: relative;
+      padding-left: pxToRem($pd);
+      padding-right: pxToRem($pd);
+      top: $top;
+      background-color: $subBc;
+    }
+  }
+}
+
+
+@mixin arrow-mixin($direct, $color: #cdcdcd, $size: 8px, $borderSize: 2px) {
+  @if $direct == up {
+    .arrow-up {
+      @include arrow(-45deg, $color, $size, $borderSize);
+      margin-top: -4px;
+      right: pxToRem(15);
+      top: 50%;
+    }
+  }
+  @else if $direct == down {
+    .arrow-down {
+      @include arrow(135deg, $color, $size, $borderSize);
+      margin-bottom: -4px;
+      right: pxToRem(15);
+      bottom: 50%;
+    }
+  }
+  @else if $direct == right {
+    .arrow-right {
+      @include arrow(45deg, $color, $size, $borderSize);
+      margin-top: -4px;
+      top: 50%;
+      right: pxToRem(15);
+    }
+  }
+  @else if $direct == left {
+    .arrow-left {
+      @include arrow(225deg, $color, $size, $borderSize);
+      margin-top: -4px;
+      top: 50%;
+      left: pxToRem(15);
+    }
+  }
+  @else {
+    //添加注释以减少输出警告日志，因为移动端页面不需要添加moz ms o 前缀
+    //@warn "Unrecognized prefix: #{$prefix}";
+  }
+}
+
+
+@function getValue($direct, $color, $percent, $fn) {
+  $top: inset 0px 1px 1px -1px if($percent != 0, if($fn==darken, darken($color, $percent), saturate($color, $percent)), $color);
+  $bottom: inset 0px -1px 1px -1px if($percent != 0, if($fn==darken, darken($color, $percent), saturate($color, $percent)), $color);
+  $left: inset 1px 0px 1px -1px if($percent != 0, if($fn==darken, darken($color, $percent), saturate($color, $percent)), $color);
+  $right: inset -1px 0px 1px -1px if($percent != 0, if($fn==darken, darken($color, $percent), saturate($color, $percent)), $color);
+  @if $direct == top {
+    @return $top;
+  }
+  @else if $direct == bottom {
+    @return $bottom;
+  }
+  @else if $direct == left {
+    @return $left;
+  }
+  @else if $direct == right {
+    @return $right;
+  }
+}
+
+@mixin onepx($directs: top right bottom left, $color: #e5e5e5, $percent:0, $fn: darken, $import:false) {
+  $list:();
+  @each $direct in $directs {
+    $value: getValue($direct, $color, $percent, $fn);
+    $list: append($list, $value, comma);
+  }
+  -webkit-box-shadow: $list if($import, !important, ());
+  box-shadow: $list if($import, !important, ());
+}
+
+//模拟圆形的箭头图标
+@mixin icon-arrow($direct, $bgColor, $arrowColor, $rightGap) {
+  display: block;
+  width: 12px;
+  height: 12px;
+  @include rounded(50%);
+  background: $bgColor;
+  position: absolute;
+  top: 50%;
+  margin-top: -6px;
+  right: $rightGap;
+  &:after {
+    content: ' ';
+    $rotateValue: 0;
+    @if $direct == up {
+      top: 4px;
+      left: 4px;
+      $rotateValue: 315deg;
+    }
+    @else if $direct == down {
+      top: 3px;
+      left: 4px;
+      $rotateValue:135deg;
+    }
+    @else if $direct == right {
+      top: 3px;
+      left: 3px;
+      $rotateValue:45deg;
+    }
+    @else if $direct == left {
+      top: 4px;
+      left: 4px;
+      $rotateValue:225deg;
+    }
+    @include arrow($rotateValue, $arrowColor, 5px, 2px);
+  }
+}

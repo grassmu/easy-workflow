@@ -1,0 +1,84 @@
+
+.mod-dialog {
+  background-color: #f6f6f6;
+  border-radius: 3px;
+  width: 90%;
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  margin-left: -45%;
+  z-index: 9999;
+  overflow: hidden;
+
+  .dialog-title {
+    padding-top: pxToRem(10);
+    padding-bottom: pxToRem(10);
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid #e5e5e5;
+    color: #666;
+    font-size: 14px;
+    .close-wrap {
+      width: 44px;
+      height: 44px;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      text-align: center;
+      line-height: 44px;
+      margin-top: -22px;
+      &:after {
+        background-image: url(../slice/common/dialog-close-rem@3x.png?base64);
+        width: 14px;
+        height: 14px;
+        background-size: 100%;
+        margin-right: 0;
+        display: inline-block;
+        content: "";
+        vertical-align: middle;
+        position: relative;
+        top: -2px;
+      }
+    }
+  }
+  .dialog-content {
+    text-align: center;
+    font-size: 12px;
+    line-height: pxToRem(22);
+    -webkit-box-sizing: border-box;
+    overflow: hidden;
+    &.noBtn {
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+    }
+  }
+  .dialog-btn-wrap {
+    height: pxToRem(45);
+    line-height: pxToRem(45);
+    text-align: center;
+    font-size: 14px;
+    @include box-justify();
+    margin-left: pxToRem(-20);
+    margin-top: pxToRem(20);
+    padding-bottom: pxToRem(15);
+    .dialog-btn {
+      text-align: center;
+      -webkit-box-flex:1;
+      margin-left: 1rem;
+      width: 0%;
+      background-color: #fff;
+      border: 1px solid #b7b7b7;
+      @include rounded(3px);
+      &.btn-strong {
+        background-color: #ff6600;
+        color: #fff;
+        border: 1px solid #ff6600;
+      }
+      &.btn-disabled {
+        background-color: #ddd;
+        color: #999;
+        border: 1px solid #ddd;
+      }
+    }
+  }
+}

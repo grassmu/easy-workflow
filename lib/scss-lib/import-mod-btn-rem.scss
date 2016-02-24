@@ -1,0 +1,17 @@
+
+.mod-btn {
+  display: block;
+  background-color: #ff6600;
+  text-align: center;
+  color: #fff;
+  position: relative;
+  border-radius: 3px;
+  height: pxToRem(40);
+  line-height: pxToRem(40);
+  width: 100%;
+  &.btn_disabled {
+    background-color: #fff;
+    color: #ccc;
+    border: 1px solid #ddd;
+  }
+}

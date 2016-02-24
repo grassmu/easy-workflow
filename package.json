@@ -1,0 +1,24 @@
+{
+  "name": "jyb-command-line",
+  "version": "1.0.0",
+  "private": true,
+  "description": "加油宝前端工作流命令行工具",
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "author": ["kardelchen","haiyang"],
+  "bin": {
+    "jyb": "./bin/command"
+  },
+  "dependencies": {
+    "colors": "^1.1.2",
+    "commander": "^2.9.0",
+    "mkdirp": "^0.5.1"
+  },
+  "engines": {
+    "node": "*"
+  },
+  "readme": "readme.md"
+}

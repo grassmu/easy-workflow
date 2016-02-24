@@ -1,0 +1,208 @@
+#!/usr/bin/env node
+var program = require('commander');
+var mkdirp = require('mkdirp');
+var log = require('colors');
+var nfs = require("fs");
+var path = require("path");
+var readline = require("readline");
+var copy = require("copy");
+var cp = require("child_process");
+
+
+program.version('0.0.1')
+        .usage("工作流命令行工具");
+
+program.command('workspace [dirName]')
+    .description("初始化工作空间")
+    .action(function (dirName) {
+        if(!dirName) {
+            getInput(initWorkSpace);
+        } else {
+            initWorkSpace(dirName);
+        }
+    })
+
+program.command('init [dirName]')
+    .description('初始化构建工作流工作目录')
+    .action(function(dirName){
+        if(!dirName) {
+            getInput(initCmd);
+        } else {
+            initCmd(dirName);
+        }
+    });
+
+program.command("exec <command>")
+    .description("执行gulp命令")
+    .option("-r, --release [fileName]", "执行编译svn改动后的文件")
+    .option("-ra, --releaseAll", "编译目录下所有的文件")
+    .option("-d, --develop", "启动开发模式，启动本地server")
+    .option("-c, --clean", "清理该目录下所有缓存及非svn目录")
+    .option("-p, --preview", "生成预览文件，并上传至预览服务器")
+    .option("-ch, --compileHtml", "编译html文件，更新为static路径以及图片base64")
+    .option("-i, --imgMin [dirName]", "压缩指定文件夹的图片或所有的img目录的文件")
+    .action()
+    .on("--help", function () {
+        console.log("  examples:\n".green);
+        console.log('  exec release accident'.green);
+        console.log('  exec clean'.green);
+    });
+
+program.parse(process.argv);
+
+/**
+ * 获取命令行输入
+ * @param callback
+ * @param msg
+ */
+function getInput(callback, msg) {
+    msg = msg || "请输入要创建的目录名：";
+    var rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rl.question(msg, function (input) {
+        rl.close();
+        callback(input);
+    });
+}
+
+function initWorkSpace(pathName) {
+    // 要初始化2个目录，为保证时序
+    var max = 2;
+    dirEmpty(pathName, function (empty) {
+        if(empty) {
+            genDirs();
+        } else {
+            getInput(function (input) {
+                if(/^y|yes|ok|true$/i.test(input)) {
+                    process.stdin.destroy();
+                    genDirs();
+                } else {
+                    console.log("命令结束");
+                    process.exit(1);
+                }
+            }, "目录不为空，确认是否继续？[y/n]");
+        }
+    });
+
+    function genDirs() {
+        console.log("\n---------start initializes the runtime environment--------------\n".green.bold);
+        mkdir(pathName, function () {
+            mkdir(pathName + "/tasks", function () {
+                console.log("   ----------------------------------------");
+                // copy文件到该目录下
+                copy_template("tasks/index.js", pathName + "/tasks/index.js");
+                copy_template("tasks/task_clean.js", pathName + "/tasks/task_clean.js");
+                copy_template("tasks/task_compileHtml.js", pathName + "/tasks/task_compileHtml.js");
+                copy_template("tasks/task_develop.js", pathName + "/tasks/task_develop.js");
+                copy_template("tasks/task_help.js", pathName + "/tasks/task_help.js");
+                copy_template("tasks/task_imgMin.js", pathName + "/tasks/task_imgMin.js");
+                copy_template("tasks/task_preview.js", pathName + "/tasks/task_preview.js");
+                copy_template("tasks/task_release.js", pathName + "/tasks/task_release.js");
+                copy_template("tasks/task_releaseAll.js", pathName + "/tasks/task_releaseAll.js");
+                complete();
+            });
+            mkdir(pathName + "/common-scss-module", function () {
+                // copy scss files
+                console.log("   ----------------------------------------");
+                copy_template("scss-lib/import-lib-mixins-rem.scss", pathName + "/common-scss-module/import-lib-mixins-rem.scss");
+                copy_template("scss-lib/import-lib-reset.scss", pathName + "/common-scss-module/import-lib-reset.scss");
+                copy_template("scss-lib/import-lib-settings.scss", pathName + "/common-scss-module/import-lib-settings.scss");
+                complete();
+            });
+            copy_template("package.json", pathName + "/package.json");
+            copy_template("readme.md", pathName + "/readme.md");
+        })
+    }
+
+    function  complete() {
+        if(--max) {return;}
+        console.log(log.green("\n---------end initializes the runtime environment---------------\n").bold);
+        console.log(" -> According to the following installation methods to install all dependencies\n".yellow.bold);
+        console.log(("  cd "+pathName+" && npm install").green.bold);
+        console.log("\n -> after install all dependencies, you can init a build workspace".yellow.bold);
+        console.log(" -> eg: jyb init proj_app_test ".yellow.bold);
+        console.log(" -> More usage, Please refer to the readme.md\n".yellow.bold);
+        console.log("-----------------------------------------------end init workspace".red.bold);
+    }
+}
+
+function initCmd(name) {
+    var max = 4;
+    var autoResizeJs = loadTemplate("autoPageSize.js");
+    var gulpFile = loadTemplate("gulpfile.js");
+    var configFile = loadTemplate(".jybworkflowrc");
+    dirEmpty(name, function (empty) {
+        if(empty) {
+            genDir();
+        } else {
+            getInput(function (input) {
+                if(/^y|yes|ok|true$/i.test(input)) {
+                    process.stdin.destroy();
+                    genDir();
+                } else {
+                    console.log("命令结束");
+                    process.exit(1);
+                }
+            }, "目录不为空，确认是否继续？[y/n]");
+        }
+    });
+
+    function genDir() {
+        console.log("\n---------start initializes the workspace--------------\n".green.bold);
+        // 生成目录
+        mkdir(name, function () {
+            mkdir(name + "/css", complete);
+            mkdir(name + "/img", complete);
+            mkdir(name + "/slice", complete);
+            mkdir(name + "/js", function () {
+                write(name + "/js/autoResize.js", autoResizeJs);
+                complete();
+            });
+            write(name + "/gulpfile.js", gulpFile);
+            write(name + "/.jybworkflowrc", configFile);
+        })
+    }
+
+    function  complete() {
+        if(--max) {return;}
+        console.log(log.green("\n---------end initializes the workspace---------------\n").bold);
+        console.log("now you need to modify the configuration files .jybworkflowrc\n".yellow.bold);
+        console.log("-----------------------------------------------the end".red.bold);
+    }
+}
+
+/**
+ * Load template file.
+ */
+
+function loadTemplate(name) {
+    return nfs.readFileSync(path.join(__dirname, "..", name), 'utf-8');
+}
+
+function mkdir(path, fn) {
+    mkdirp(path, 0755, function(err){
+        if (err) throw err;
+        console.log('   \033[36mcreate\033[0m : ' + path);
+        fn && fn();
+    });
+}
+
+function write(path, str, mode) {
+    nfs.writeFileSync(path, str, { mode: mode || 0666 });
+    console.log('   \x1b[36mcreate\x1b[0m : ' + path);
+}
+
+function copy_template(from, to) {
+    from = path.join(__dirname, '..', 'lib', from);
+    write(to, nfs.readFileSync(from, 'utf-8'));
+}
+
+function dirEmpty(pathName, callback) {
+    nfs.readdir(pathName, function(err, files){
+        if (err && 'ENOENT' != err.code) throw err;
+        callback(!files || !files.length);
+    });
+}

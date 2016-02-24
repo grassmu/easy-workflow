@@ -1,0 +1,32 @@
+{
+    "devDest": "./_dev",
+    "releaseDest": "./_release",
+    "debugDest": "./_dev",
+    "imageMinDest": "./_imageCompress/",
+    "autoPreview": false,
+    "compileHtml": true,
+    "htmlReplacePath": "",
+    "svn": {
+        "copyPath": "",
+        "autoSubmit": true,
+        "comment": "commit css&image"
+    },
+    "ftp": {
+        "host": "",
+        "port": "",
+        "remotePath": "",
+        "username": "",
+        "password": "",
+        "autoUpload": true
+    },
+    "preview": {
+        "host": "",
+        "port": "",
+        "username":"",
+        "password":"",
+        "remotePath":""
+    },
+    "cdn": {
+
+    }
+}

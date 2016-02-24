@@ -1,0 +1,46 @@
+
+.mod-spinner {
+  position: fixed;
+  z-index: 9999;
+  width: 4.6rem;
+  height: 4.6rem;
+  overflow: hidden;
+  left: 50%;
+  top: 50%;
+  margin-left: -2.3rem;
+  margin-top: -2.3rem;
+  background: rgba(0, 0, 0, 0.7);
+  @include rounded(.3rem);
+  .spinner-wrap {
+    position: relative;
+    overflow: hidden;
+    z-index: 999;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    @include vt-middle();
+    -webkit-box-orient: vertical;
+    .rotate-icon {
+      width: 35px;
+      height: 35px;
+      overflow: hidden;
+      display: inline-block;
+      background: url(../slice/common/spinner.png?base64) center no-repeat;
+      background-size: cover;
+      -webkit-animation: spinner_rotate 1.8s infinite linear;
+    }
+    .text {
+      font-size: 12px;
+      color:#fff;
+    }
+  }
+}
+
+@-webkit-keyframes spinner_rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
