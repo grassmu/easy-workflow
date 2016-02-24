@@ -52,8 +52,8 @@ $ npm install
 ```sh
 $ es init <dirName>
 ```
-在这一步会生成若干文件，今后所有的构建文件的开发都会在这个目录下进行，这么设计的目的就是为了省事儿，譬如我有很多个开发目录，我就不需要<br/>
-在每一个开发目录下都生成一份node_modules，所有的依赖都在父目录的tasks和node_modules里了。<br/>eg：easy init demo，那么：
+在这一步会生成若干文件，今后所有的构建文件的开发都会在这个目录下进行，这么设计的目的就是为了省事儿，譬如我有很多个开发目录，我就不需要
+在每一个开发目录下都生成一份node_modules，所有的依赖都在父目录的tasks和node_modules里了。<br/>eg：es init demo，那么：
 <b>开发目录结构如下</b>
 ```sh
 |- dirName
