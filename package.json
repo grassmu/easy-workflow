@@ -2,7 +2,7 @@
   "name": "easy-workflow",
   "version": "0.0.1",
   "private": true,
-  "description": "前端构建工作流命",
+  "description": "前端构建工作流",
   "keywords":["workflow","css", "static", "node", "gulp"],
   "bugs": {
       "email": "kardelchen@jyblife.com"
