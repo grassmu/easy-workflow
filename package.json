@@ -1,6 +1,6 @@
 {
   "name": "easy-workflow",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "private": false,
   "description": "前端构建工作流",
   "keywords":["workflow","css", "static", "node", "gulp"],
@@ -24,5 +24,5 @@
   "engines": {
     "node": "*"
   },
-  "readme": "readme.md"
+  "readmeFilename": "README.md"
 }
