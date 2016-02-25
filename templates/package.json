@@ -1,13 +1,9 @@
 {
-  "name": "jybworkflow",
+  "name": "easy-workflow",
   "version": "1.0.0",
   "private": true,
-  "description": "jiayoubao workflow",
-  "licenses": [
-    {
-      "type": "MIT"
-    }
-  ],
+  "description": "easy-workflow切图仔工作流",
+  "licenses": "MIT",
   "dependencies": {
     "autoprefixer": "^6.3.1",
     "cheerio": "*",
@@ -41,7 +37,6 @@
     "through2": "2.0.0",
     "yargs": "^3.32.0"
   },
-  "readme": "jyb workflow",
   "devDependencies": {
     "base64-img": "^1.0.3",
     "glob": "^6.0.4",
