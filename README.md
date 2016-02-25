@@ -102,14 +102,14 @@ $ gulp develop
 
 -------------------------------------
 ### 配置文件说明
-```json
+```javascript
 {
-    "devDest": "./_dev",                      // 开发模式下，存放编译后的开发文件的目录，html文件中的静态资源应当指向该目录
-    "releaseDest": "./_release",              // 最终编译文件存放目录
-    "debugDest": "./_dev",                    // debug模式下存放文件的目录 TODO
-    "imageMinDest": "./_imageCompress/",      // 压缩图片命令存放压缩后图片路径
-    "autoPreview": false,                     // 是否自动生成预览文件，在编译后，即执行release命令
-    "compileHtml": true,                      // 是否自动编译HTML文件，TODO
+    "devDest": "./_dev",                // 开发模式下，存放编译后的开发文件的目录，html文件中的静态资源应当指向该目录
+    "releaseDest": "./_release",        // 最终编译文件存放目录
+    "debugDest": "./_dev",              // debug模式下存放文件的目录 TODO
+    "imageMinDest": "./_imageCompress/", // 压缩图片命令存放压缩后图片路径
+    "autoPreview": false,                  // 是否自动生成预览文件，在编译后，即执行release命令
+    "compileHtml": true,                  // 是否自动编译HTML文件，TODO
     "htmlReplacePath": "/static/style/app/publish/",      // 编译html文件时，自动替换资源路径
     "svn": {
         "copyPath": "relative/path/xxxx",      // 在执行release后，将编译后的文件copy至该目录并提交
