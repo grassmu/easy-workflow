@@ -1,6 +1,6 @@
 {
   "name": "easy-workflow",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": false,
   "description": "基于gulp4.0的跨平台前端构建工作流，基于scss，支持3x雪碧图合成，持续更新中",
   "keywords":["workflow","css", "static", "node", "gulp"],
