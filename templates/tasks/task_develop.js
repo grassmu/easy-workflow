@@ -154,7 +154,7 @@ module.exports = function (gulp, config) {
         }
         ptr = setTimeout(function () {
             liveReload.changed(file);
-        }, 1000);
+        }, 5000);
         //saveConfig();
     }
 
@@ -198,4 +198,4 @@ module.exports = function (gulp, config) {
         server
         //runCmd
     ));
-}
+};
